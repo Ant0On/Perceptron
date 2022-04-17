@@ -71,9 +71,9 @@ public class Main {
         int objectNumber = 0;
         while ((line = reader.readLine()) != null) {
             List<Double> objectVectors = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < size + 1; i++) {
                 String[] values = line.split(splitBy);
-                if (i == size - 1)
+                if (i == size)
                     typeList.add(values[size - 1]);
                 else
                     objectVectors.add(Double.parseDouble(values[i]));
