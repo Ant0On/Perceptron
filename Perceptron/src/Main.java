@@ -22,9 +22,11 @@ public class Main {
                 "Perceptron\\Perceptron\\src\\perceptron.test.data.csv"));
 
         Scanner scanner = new Scanner(System.in);
+        System.out.print("How many parameters need to be loaded: ");
+        int numberOfParameters = scanner.nextInt();
 
-        scan(splitBy, typeList, vectorMap,reader);
-        double[] weightArr = new double[4];
+        scan(splitBy, typeList, vectorMap,numberOfParameters,reader);
+        double[] weightArr = new double[numberOfParameters];
         for (int i = 0; i < weightArr.length; i++)
             weightArr[i] = (Math.random() * 6) - 3;
 
@@ -40,7 +42,7 @@ public class Main {
                     answersList.add(1);
             }
             for (int i = 0; i < vectorMap.size(); i++) {
-                learn(vectorMap,answersList,weightArr,alfa,theta);
+                learn(vectorMap,answersList,weightArr,alfa,theta,numberOfParameters);
             }
             howManyTimes--;
         }
@@ -48,7 +50,7 @@ public class Main {
         answersList.clear();
         typeList.clear();
         System.out.println();
-        scan(splitBy, typeList, vectorMap,readerTest);
+        scan(splitBy, typeList, vectorMap,numberOfParameters,readerTest);
 
         String firstType = typeList.get(0);
         for (String s : typeList) {
@@ -58,21 +60,21 @@ public class Main {
                 answersList.add(1);
         }
 
-        goodHit = test(vectorMap,answersList,weightArr,theta);
+        goodHit = test(vectorMap,answersList,weightArr,numberOfParameters,theta);
         accuracy = (goodHit / (double) typeList.size()) * 100;
         System.out.println((int)accuracy + "%");
 
     }
     private static void scan(String splitBy, List<String> typeList,
-                             HashMap<Integer, List<Double>> vectorMap, BufferedReader reader) throws IOException {
+                             HashMap<Integer, List<Double>> vectorMap, int size, BufferedReader reader) throws IOException {
         String line;
         int objectNumber = 0;
         while ((line = reader.readLine()) != null) {
             List<Double> objectVectors = new ArrayList<>();
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < size; i++) {
                 String[] values = line.split(splitBy);
-                if (i == 4)
-                    typeList.add(values[4]);
+                if (i == size - 1)
+                    typeList.add(values[size - 1]);
                 else
                     objectVectors.add(Double.parseDouble(values[i]));
             }
@@ -81,12 +83,12 @@ public class Main {
         }
     }
     public static void learn(HashMap<Integer, List<Double>> vectorMap, List<Integer> answersList, double[] weightArr,
-                             double alpha,double theta){
+                             double alpha,double theta, int size){
         for (int i = 0; i < vectorMap.size(); i++) {
             int net = 0;
             double y = 0;
             int d = answersList.get(i);
-            for (int j = 0; j < 4; j++) {
+            for (int j = 0; j < size; j++) {
                 y = y + vectorMap.get(i).get(j) * weightArr[j];
             }
             y -= theta;
@@ -101,12 +103,12 @@ public class Main {
         }
     }
     public static double test(HashMap<Integer, List<Double>> vectorMap, List<Integer> answersList, double[] weightArr
-            ,double theta){
+            ,int size,double theta){
         double goodHit = 0;
         for (int i = 0; i < vectorMap.size(); i++) {
             double y = 0;
             int net = 0;
-            for (int j = 0; j < 4; j++) {
+            for (int j = 0; j < size; j++) {
                 y = y + vectorMap.get(i).get(j) * weightArr[j];
             }
             y -= theta;
